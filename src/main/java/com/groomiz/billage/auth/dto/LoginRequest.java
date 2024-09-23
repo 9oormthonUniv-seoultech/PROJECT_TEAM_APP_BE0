@@ -1,5 +1,6 @@
 package com.groomiz.billage.auth.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class LoginRequest {
 
-	private String username;
+    private String username;
 
-	private String password;
+    private String password;
 }
