@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.groomiz.billage.reservation.entity.ReservationType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,13 +29,11 @@ public class AdminReservationRequest {
 
 	@NotNull
 	@Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "날짜 형식은 yyyy-MM-dd여야 합니다.")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Schema(description = "시작 날짜", example = "2024-09-03")
 	private LocalDate startDate;
 
 	@NotNull
 	@Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "날짜 형식은 yyyy-MM-dd여야 합니다.")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Schema(description = "종료 날짜", example = "2024-09-05")
 	private LocalDate endDate;
 
@@ -45,13 +42,11 @@ public class AdminReservationRequest {
 
 	@NotNull
 	@Pattern(regexp = "\\d{2}-\\d{2}", message = "시간 형식은 HH:mm이어야 합니다.")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
 	@Schema(description = "시작 시간", example = "9:00")
 	private LocalTime startTime;
 
 	@NotNull
 	@Pattern(regexp = "\\d{2}-\\d{2}", message = "시간 형식은 HH:mm이어야 합니다.")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
 	@Schema(description = "종료 시간", example = "10:00")
 	private LocalTime endTime;
 }

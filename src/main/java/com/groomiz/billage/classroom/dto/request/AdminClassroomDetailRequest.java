@@ -2,8 +2,6 @@ package com.groomiz.billage.classroom.dto.request;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -21,7 +19,6 @@ public class AdminClassroomDetailRequest {
 
 	@NotNull
 	@Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "날짜 형식은 yyyy-MM-dd여야 합니다.")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Schema(description = "조회할 날짜", example = "2024-09-03")
 	private LocalDate date;
 
