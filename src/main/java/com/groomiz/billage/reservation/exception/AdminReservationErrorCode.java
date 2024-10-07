@@ -13,7 +13,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AdminReservationErrorCode implements BaseErrorCode {
 
-	@ExplainError("예약 타입이 유효하지 않을 때 발생하는 오류입니다.")
+	@ExplainError("예약 상태 타입 이 유효하지 않을 때 발생하는 오류입니다.")
 	INVALID_STATUS_FORMAT(BAD_REQUEST, "ADMIN_RESERVATION_400_1", "예약 상태 값이 올바르지 않습니다. 허용되는 값은 'pending', 'approve', 'reject'입니다."),
 
 	@ExplainError("예약 타입 파라미터가 누락되었을 때 발생하는 오류입니다.")
