@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.groomiz.billage.reservation.dto.request.AdminReservationRequest;
+import com.groomiz.billage.reservation.dto.response.AdminReservationResponse;
 import com.groomiz.billage.reservation.dto.response.AdminReservationStatusListResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,22 +57,30 @@ public class AdminReservationController {
 
 	@PostMapping
 	@Operation(summary = "예약 요청 처리")
-	public ResponseEntity<?> createReservation(
+	public ResponseEntity<Map<String, String>> createReservation(
 		@RequestBody AdminReservationRequest request) {
 
-		return ResponseEntity.ok().body("{\"message\": \"예약 완료 하였습니다.\"}");
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "예약 완료 하였습니다.");
+
+		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/{reservationId}")
+	@GetMapping("/{id}")
 	@Operation(summary = "예약 상세 조회")
-	public ResponseEntity<String> getReservation(@PathVariable Long reservationId) {
+	public ResponseEntity<AdminReservationResponse> getReservation(@PathVariable Long id) {
+
 		return ResponseEntity.ok(null);
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "예약 삭제", description = "단일 예약, 기간 예약, 반복 예약을 삭제합니다.")
-	public ResponseEntity<String> deleteReservation(@PathVariable Long id,
+	public ResponseEntity<Map<String, String>> deleteReservation(@PathVariable Long id,
 		@RequestParam(required = false, defaultValue = "single") String type) {
-		return ResponseEntity.ok(null);
+
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "예약 삭제 하였습니다.");
+
+		return ResponseEntity.ok(response);
 	}
 }
