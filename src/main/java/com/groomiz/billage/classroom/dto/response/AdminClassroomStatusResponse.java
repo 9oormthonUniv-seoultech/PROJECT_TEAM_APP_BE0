@@ -35,12 +35,16 @@ public class AdminClassroomStatusResponse {
 		@Schema(description = "건물 이름", example = "미래관")
 		private String buildingName;
 
+		@Schema(description = "건물 번호", example = "60")
+		private String buildingNumber;
+
 		@Schema(description = "필터링 강의실 리스트")
 		private List<ClassroomResponse> classrooms;
 
 		@Builder
-		public BuildingResponse(String buildingName, List<ClassroomResponse> classrooms) {
+		public BuildingResponse(String buildingName, String buildingNumber, List<ClassroomResponse> classrooms) {
 			this.buildingName = buildingName;
+			this.buildingNumber = buildingNumber;
 			this.classrooms = classrooms;
 		}
 
@@ -63,8 +67,14 @@ public class AdminClassroomStatusResponse {
 			@Schema(description = "층", example = "1")
 			private Long floor;
 
+			@Schema(description = "강의실 ID", example = "1")
+			private Long classroomId;
+
 			@Schema(description = "강의실 번호", example = "101")
 			private String classroomNumber;
+
+			@Schema(description = "강의실 이름")
+			private String classroomName;
 
 			@Schema(description = "시간 정보 리스트")
 			private List<ReservationTime> time;
@@ -73,10 +83,12 @@ public class AdminClassroomStatusResponse {
 			private Integer headcount;
 
 			@Builder
-			public ClassroomResponse(Long floor, String classroomNumber, List<ReservationTime> time,
+			public ClassroomResponse(Long floor, Long classroomId, String classroomNumber, String classroomName, List<ReservationTime> time,
 				Integer headcount) {
 				this.floor = floor;
+				this.classroomId = classroomId;
 				this.classroomNumber = classroomNumber;
+				this.classroomName = classroomName;
 				this.time = time;
 				this.headcount = headcount;
 			}
@@ -84,7 +96,9 @@ public class AdminClassroomStatusResponse {
 			public static ClassroomResponse from(Classroom classroom, List<Reservation> reservations) {
 				return ClassroomResponse.builder()
 					.floor(classroom.getFloor())
+					.classroomId(classroom.getId())
 					.classroomNumber(classroom.getNumber())
+					.classroomName(classroom.getName())
 					.time(reservations.stream()
 						.map(ReservationTime::from)
 						.collect(Collectors.toList()))
