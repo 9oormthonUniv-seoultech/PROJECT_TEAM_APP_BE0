@@ -28,6 +28,7 @@ public class S3Config {
     @Bean
     public AmazonS3Client s3Builder() {
         AWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKey, secretKey);
+        System.setProperty("com.amazonaws.sdk.disableCertChecking", "true");
 
         return (AmazonS3Client) AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
