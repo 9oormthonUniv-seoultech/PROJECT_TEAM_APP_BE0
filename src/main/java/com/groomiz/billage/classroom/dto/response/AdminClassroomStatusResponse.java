@@ -55,6 +55,7 @@ public class AdminClassroomStatusResponse {
 
 			return BuildingResponse.builder()
 				.buildingName(building.getName())
+				.buildingNumber(building.getNumber())
 				.classrooms(classrooms)
 				.build();
 		}
