@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.groomiz.billage.classroom.dto.AdminReservationSearchByClassroomCond;
+import com.groomiz.billage.classroom.dto.response.AdminClassroomDetailResponse.ReservationDetail;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +35,17 @@ public class AdminClassroomService {
 	@Transactional(readOnly = true)
 	public AdminClassroomDetailResponse findClassroomByIdAndDate(Long classroomId, LocalDate date) {
 
-		Classroom classroom = classroomRepository.findClassroomByIdAndDate(classroomId, date)
-			.orElseThrow(() -> new ClassroomException(ClassroomErrorCode.CLASSROOM_NOT_FOUND));
+		Classroom classroom = classroomRepository.findClassroomById(classroomId)
+				.orElseThrow(() -> new ClassroomException(ClassroomErrorCode.CLASSROOM_NOT_FOUND));
 
-		return AdminClassroomDetailResponse.from(classroom, date);
+		AdminReservationSearchByClassroomCond cond = AdminReservationSearchByClassroomCond.builder()
+				.classroom(classroom)
+				.applyDate(date)
+				.build();
+
+		List<ReservationDetail> reservations = reservationRepository.searchPendingAndApprovedReservationByClassroom(cond);
+
+		return AdminClassroomDetailResponse.from(classroom, reservations, date);
 	}
 
 	@Transactional(readOnly = true)

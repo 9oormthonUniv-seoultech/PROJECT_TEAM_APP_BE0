@@ -10,6 +10,9 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
+import com.groomiz.billage.classroom.dto.response.AdminClassroomDetailResponse.ReservationDetail;
+import com.groomiz.billage.classroom.entity.Classroom;
+import com.groomiz.billage.classroom.dto.AdminReservationSearchByClassroomCond;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -87,6 +90,33 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
 			applyDateLt(today)
 		);
 	}
+
+	@Override
+	public List<ReservationDetail> searchPendingAndApprovedReservationByClassroom(AdminReservationSearchByClassroomCond reservationSearchCond) {
+		return queryFactory
+				.select(
+						Projections.fields(ReservationDetail.class,
+								reservation.id.as("reservationId"),
+								reservationStatus.status,
+								reservation.applyDate,
+								reservation.startTime,
+								reservation.endTime,
+								reservation.headcount,
+								member.username.as("memberName"),
+								member.studentNumber
+								)
+				).from(reservation)
+				.join(reservation.reservationStatus, reservationStatus)
+				.join(reservation.classroom, classroom)
+				.join(reservationStatus.requester, member)
+				.where(
+						statusIn(List.of(ReservationStatusType.APPROVED, ReservationStatusType.PENDING)),
+						classroomEq(reservationSearchCond.getClassroom()),
+						applyDateEq(reservationSearchCond.getApplyDate())
+				)
+				.fetch();
+	}
+
 
 	private Page<ReservationInfo> fetchAdminReservationPage(Pageable pageable, BooleanExpression... conditions) {
 		List<ReservationInfo> content = queryFactory
@@ -188,4 +218,13 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
 	private BooleanExpression applyDateLt(LocalDate today) {
 		return today != null ? reservation.applyDate.lt(today) : null;
 	}
+
+	private BooleanExpression classroomEq(Classroom classroomCond) {
+		return classroomCond != null ? classroom.eq(classroomCond) : null;
+	}
+
+	private BooleanExpression applyDateEq(LocalDate date) {
+		return date != null ? reservation.applyDate.eq(date) : null;
+	}
+
 }
