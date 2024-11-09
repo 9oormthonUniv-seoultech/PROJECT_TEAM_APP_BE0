@@ -115,7 +115,7 @@ public class ReservationService {
 			try {
 				fcmService.sendMessage(admin.getStudentNumber(), title, body);
 			} catch (FirebaseMessagingException e) {
-				throw new RuntimeException(e);
+				log.error("FCM 전송 실패");
 			}
 		});
 		return savedReservation.getId();

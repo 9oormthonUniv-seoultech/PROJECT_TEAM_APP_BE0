@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.groomiz.billage.classroom.entity.Classroom;
 import com.groomiz.billage.member.entity.Member;
 import com.groomiz.billage.reservation.entity.Reservation;
@@ -36,7 +37,7 @@ public class AdminClassroomDetailResponse {
 	private List<ReservationDetail> reservations;
 
 	@Data
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@NoArgsConstructor
 	@Schema(description = "예약 상세 정보")
 	public static class ReservationDetail {
 
@@ -49,10 +50,12 @@ public class AdminClassroomDetailResponse {
 		@Schema(description = "예약 날짜", example = "2024-09-04")
 		private LocalDate date;
 
-		@Schema(description = "시작 시간", example = "09:00")
+		@Schema(description = "시작 시간", example = "09:00", type = "string")
+		@JsonFormat(pattern = "HH:mm")
 		private LocalTime startTime;
 
-		@Schema(description = "종료 시간", example = "10:00")
+		@Schema(description = "종료 시간", example = "10:00", type = "string")
+		@JsonFormat(pattern = "HH:mm")
 		private LocalTime endTime;
 
 		@Schema(description = "인원 수", example = "10")
@@ -63,35 +66,6 @@ public class AdminClassroomDetailResponse {
 
 		@Schema(description = "예약자 학번", example = "20201234")
 		private String studentNumber;
-
-		@Builder
-		public ReservationDetail(Long reservationId, ReservationStatusType status, LocalDate date, LocalTime startTime, LocalTime endTime,
-			Integer headcount,
-			String memberName, String studentNumber) {
-			this.reservationId = reservationId;
-			this.status = status;
-			this.date = date;
-			this.startTime = startTime;
-			this.endTime = endTime;
-			this.headcount = headcount;
-			this.memberName = memberName;
-			this.studentNumber = studentNumber;
-		}
-
-		public static ReservationDetail from(Reservation reservation) {
-			Member requester = reservation.getReservationStatus().getRequester();
-
-			return ReservationDetail.builder()
-				.reservationId(reservation.getId())
-				.status(reservation.getReservationStatus().getStatus())
-				.date(reservation.getApplyDate())
-				.startTime(reservation.getStartTime())
-				.endTime(reservation.getEndTime())
-				.headcount(reservation.getHeadcount())
-				.memberName(requester.getUsername())
-				.studentNumber(requester.getStudentNumber())
-				.build();
-		}
 	}
 
 	@Builder
@@ -104,18 +78,13 @@ public class AdminClassroomDetailResponse {
 		this.reservations = reservations;
 	}
 
-	public static AdminClassroomDetailResponse from(Classroom classroom, LocalDate date) {
-		List<Reservation> reservations = classroom.getReservations();
-
-
+	public static AdminClassroomDetailResponse from(Classroom classroom, List<ReservationDetail> reservations, LocalDate date) {
 		return AdminClassroomDetailResponse.builder()
 			.date(date)
 			.buildingName(classroom.getBuilding().getName())
 			.floor(classroom.getFloor())
 			.classroomName(classroom.getName())
-			.reservations(reservations.stream()
-				.map(ReservationDetail::from)
-				.toList())
+			.reservations(reservations)
 			.build();
 	}
 }

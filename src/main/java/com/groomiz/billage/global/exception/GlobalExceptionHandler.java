@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.groomiz.billage.classroom.exception.ClassroomException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -129,6 +130,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.valueOf(reason.getStatus()))
 			.body(errorResponse);
+	}
+
+	@ExceptionHandler(ClassroomException.class)
+	public ResponseEntity<ErrorResponse> handleCLassroomException(ClassroomException ex, HttpServletRequest request) {
+
+		log.info("ClassroomException: {}", ex.getMessage());
+		ErrorReason reason = ex.getErrorReason();
+		ErrorResponse errorResponse =
+				new ErrorResponse(ex.getErrorReason(), request.getRequestURL().toString());
+
+		return ResponseEntity.status(HttpStatus.valueOf(reason.getStatus()))
+				.body(errorResponse);
 	}
 
 	@ExceptionHandler(AuthException.class)
